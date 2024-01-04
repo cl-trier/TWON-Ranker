@@ -5,6 +5,8 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 class TopicClassifier:
+    # https://huggingface.co/cardiffnlp/tweet-topic-21-multi
+    # https://arxiv.org/abs/2209.09824
 
     def __init__(self, slug: str = 'cardiffnlp/tweet-topic-21-multi'):
         self.tokenizer = AutoTokenizer.from_pretrained(slug)

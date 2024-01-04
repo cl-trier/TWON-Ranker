@@ -5,6 +5,8 @@ from transformers import AutoTokenizer, AutoModel
 
 
 class SimilarityComputer:
+    # https://huggingface.co/Twitter/twhin-bert-base
+    # https://arxiv.org/abs/2209.07562
 
     def __init__(self, slug: str = 'Twitter/twhin-bert-base'):
         self.tokenizer = AutoTokenizer.from_pretrained(slug)
