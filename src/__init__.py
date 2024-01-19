@@ -9,7 +9,7 @@ from .schemas.shared import RankingMap, FeatureTable
 transformers.logging.set_verbosity_error()
 
 
-class Recommender:
+class Ranker:
 
     def __init__(self):
         self.modules = dict(
@@ -24,6 +24,16 @@ class Recommender:
             posts: List[Post],
             weights: Dict[str, float]
     ) -> Tuple[RankingMap, FeatureTable]:
+        """
+        Calculate the ranking and feature table based on user, posts, and weights.
+        Args:
+            user (User): The user object representing the user.
+            posts (List[Post]): A list of Post objects representing the posts.
+            weights (Dict[str, float]): A dictionary mapping feature names to weights.
+
+        Returns:
+            Tuple[RankingMap, FeatureTable]: A tuple containing the ranking map and feature table.
+        """
         features: FeatureTable = {post.id: dict() for post in posts}
 
         for module in self.modules.keys():
@@ -38,11 +48,31 @@ class Recommender:
             user: User,
             posts: List[Post]
     ) -> None:
+        """
+        Apply a specified module to the given features.
+
+        Args:
+            features (FeatureTable): The feature table to apply the module to.
+            module_name (str): The name of the module to apply.
+            user (User): The user object.
+            posts (List[Post]): The list of posts.
+
+        Returns:
+            None: This function does not return anything.
+        """
         for pid, value in self.modules[module_name](user, posts).items():
             features[pid][module_name] = value
 
     @staticmethod
     def compute_weighted_ranking(features: FeatureTable, weights: Dict[str, float]) -> RankingMap:
+        """
+        Compute the weighted ranking for a given set of features.
+        Args:
+            features (FeatureTable): A dictionary containing the features for each pid.
+            weights (Dict[str, float]): A dictionary containing the weights for each feature.
+        Returns:
+            RankingMap: A dictionary mapping each pid to its computed weighted ranking.
+        """
         return {
             pid: sum([value * weights.get(key, 1.) for key, value in feature.items()])
             for pid, feature in features.items()

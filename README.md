@@ -1,3 +1,3 @@
-# TWON: Recommender - Ranking &amp; Filtering Timelines
+# TWON: Ranker - Modularized & Weighted Timeline Ranking
 
 [...]

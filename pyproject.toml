@@ -1,7 +1,7 @@
 [project]
 dynamic = ["dependencies"]
 
-name = "twon_recommender"
+name = "twon_ranker"
 version = "0.0.1"
 authors = [
     { name = "Simon Münker", email = "muenker@uni-trier.de" },
@@ -21,6 +21,9 @@ requires-python = ">=3.10"
 dependencies = { file = ["requirements.txt"] }
 
 [tool.pytest.ini_options]
+pythonpath = [
+    "."
+]
 log_cli = true
 log_cli_level = "INFO"
 filterwarnings = [
