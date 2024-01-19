@@ -1,0 +1,28 @@
+[project]
+dynamic = ["dependencies"]
+
+name = "twon_recommender"
+version = "0.0.1"
+authors = [
+    { name = "Simon Münker", email = "muenker@uni-trier.de" },
+]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+requires-python = ">=3.10"
+
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+filterwarnings = [
+    "ignore::DeprecationWarning"
+]

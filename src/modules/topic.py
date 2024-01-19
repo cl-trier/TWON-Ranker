@@ -1,7 +1,10 @@
-from typing import List
+from typing import List, Dict, Iterator, Set
 
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+from ..schemas import User, Post
+from ..schemas.shared import Post_ID, RankingMap
 
 
 class TopicClassifier:
@@ -14,16 +17,38 @@ class TopicClassifier:
 
         self.normalize_fn = torch.nn.Sigmoid()
 
-    def __call__(self, batch: List[str], theta: float = 0.5) -> List[List[str]]:
-        logits = self.model(**self.tokenizer(batch, padding=True, return_tensors="pt")).logits
+    def __call__(
+            self,
+            user: User,
+            timeline_posts: List[Post],
+            theta: float = 0.5
+    ) -> RankingMap:
+        user_topics: Set[str] = set().union(*self.classify(user.posts, theta).values())
 
-        norm_logits = (self.normalize_fn(logits) >= theta) * 1
+        return {
+            pid: len(topics.intersection(user_topics)) / len(user_topics)
+            for pid, topics in self.classify(timeline_posts, theta).items()
+        }
 
-        pred_ids = [preds.nonzero().squeeze() for preds in torch.unbind(norm_logits)]
+    def classify(self, batch: List[Post], theta: float) -> Dict[Post_ID, Set[str]]:
+        logits: torch.tensor = self.model_forward([post.content for post in batch])
+        batch_label: torch.tensor = self.extract_label(logits, theta)
 
-        return [
-            [self.model.config.id2label[idx] for idx in ids.tolist()]
-            if type(ids.tolist()) == list else
-            [self.model.config.id2label[ids.item()]]
-            for ids in pred_ids
-        ]
+        return {post.id: post_label for post, post_label in zip(batch, batch_label)}
+
+    def model_forward(self, batch: List[str]) -> torch.tensor:
+        return self.model(**self.tokenizer(batch, padding=True, return_tensors="pt")).logits
+
+    def extract_label(self, batch_logits: torch.tensor, theta: float) -> Iterator[Set[str]]:
+
+        batch_norm_logits: torch.tensor = (self.normalize_fn(batch_logits) >= theta) * 1
+        batch_ids: torch.tensor = [preds.nonzero().squeeze() for preds in torch.unbind(batch_norm_logits)]
+
+        for post_ids in batch_ids:
+            ids: List[int] | int = post_ids.tolist()
+
+            if type(ids) is list:
+                yield set(self.model.config.id2label[i] for i in ids)
+
+            else:
+                yield set([self.model.config.id2label[ids]])
