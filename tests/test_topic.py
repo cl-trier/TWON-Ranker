@@ -1,17 +1,12 @@
 import logging
 from typing import List
 
-from src.modules import TopicClassifier
-from src.schemas import User, Post
+from src import schemas, modules
 
 
-def test_topic(user: User, posts: List[Post]):
-    results = TopicClassifier()(user, posts)
+def test_topic(user: schemas.User, posts: List[schemas.Post]):
+    results = modules.TopicClassifier()(user, posts)
     logging.info(results)
 
     assert set(results.keys()) == set([post.id for post in posts])
     assert all(0. <= score <= 1. for score in results.values())
-
-
-
-

@@ -1,7 +1,6 @@
 from typing import List
 
-from ..schemas import Post, User
-from ..schemas.shared import RankingMap
+from src import schemas
 
 
 class NetworkAnalysis:
@@ -22,7 +21,7 @@ class NetworkAnalysis:
         )
 
     @staticmethod
-    def is_follower(user: User, timeline_posts: List[Post]) -> RankingMap:
+    def is_follower(user: schemas.User, timeline_posts: List[schemas.Post]) -> schemas.shared.RankingMap:
         """
         Generate a ranking map indicating whether the author of each post in the timeline follows by the given user.
 
@@ -31,12 +30,12 @@ class NetworkAnalysis:
             timeline_posts (List[Post]): The list of post objects representing the timeline posts.
 
         Returns:
-            RankingMap: A dictionary mapping each post ID to a binary value indicating whether the author is followed by the user.
+            RankingMap: A dictionary mapping each post ID to a boolean indicating if the author is followed by the user.
         """
         return {post.id: int(post.author_id in user.follower) for post in timeline_posts}
 
     @staticmethod
-    def is_following(user: User, timeline_posts: List[Post]) -> RankingMap:
+    def is_following(user: schemas.User, timeline_posts: List[schemas.Post]) -> schemas.shared.RankingMap:
         """
         Generate a ranking map indicating whether the author of each post in the timeline is followed by the given user.
 
@@ -45,12 +44,12 @@ class NetworkAnalysis:
             timeline_posts (List[Post]): The list of post objects representing the timeline posts.
 
         Returns:
-            RankingMap: A dictionary mapping each post ID to a binary value indicating whether the author is followed by the user.
+            RankingMap: A dictionary mapping each post ID to a boolean indicating if the author is followed by the user.
         """
         return {post.id: int(post.author_id in user.following) for post in timeline_posts}
 
     @staticmethod
-    def likes_count(_: User, timeline_posts: List[Post]) -> RankingMap:
+    def likes_count(_: schemas.User, timeline_posts: List[schemas.Post]) -> schemas.shared.RankingMap:
         """
         Generates a ranking map of the number of likes for each post in the timeline.
 
@@ -64,7 +63,7 @@ class NetworkAnalysis:
         return {post.id: len(post.likes) for post in timeline_posts}
 
     @staticmethod
-    def comments_count(_: User, timeline_posts: List[Post]) -> RankingMap:
+    def comments_count(_: schemas.User, timeline_posts: List[schemas.Post]) -> schemas.shared.RankingMap:
         """
         Generates a ranking map of the number of comments for each post in the timeline.
 

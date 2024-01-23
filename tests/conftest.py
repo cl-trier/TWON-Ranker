@@ -2,17 +2,17 @@ from typing import List, Dict
 
 import pytest
 
-from src.schemas import User, Post
+from src import schemas
 
 
 @pytest.fixture(scope='session', autouse=True)
-def user(request) -> User:
-    return User(**User.model_config['json_schema_extra']['examples'][0])
+def user(request) -> schemas.User:
+    return schemas.User(**schemas.User.model_config['json_schema_extra']['examples'][0])
 
 
 @pytest.fixture(scope='session', autouse=True)
-def posts(request) -> List[Post]:
-    return [Post(**example) for example in Post.model_config['json_schema_extra']['examples']]
+def posts(request) -> List[schemas.Post]:
+    return [schemas.Post(**example) for example in schemas.Post.model_config['json_schema_extra']['examples']]
 
 
 @pytest.fixture(scope='session', autouse=True)

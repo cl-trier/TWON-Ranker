@@ -1,7 +1,7 @@
 [project]
 dynamic = ["dependencies"]
 
-name = "twon_ranker"
+name = "TWON-Ranker"
 version = "0.0.1"
 authors = [
     { name = "Simon Münker", email = "muenker@uni-trier.de" },
@@ -16,14 +16,16 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 
+[project.urls]
+Homepage = "https://ranker.twon.unit-trier.de"
+Repository = "https://github.com/smnmnkr/TWON-Ranker"
+
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
 
 [tool.pytest.ini_options]
-pythonpath = [
-    "."
-]
+pythonpath = ["."]
 log_cli = true
 log_cli_level = "INFO"
 filterwarnings = [

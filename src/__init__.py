@@ -1,29 +1,31 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 import transformers
 
-from .modules import SimilarityComputer, TopicClassifier, NetworkAnalysis
-from .schemas import User, Post
-from .schemas.shared import RankingMap, FeatureTable
+from src import modules
+from src import schemas
+from src.response import Response
 
 transformers.logging.set_verbosity_error()
 
 
 class Ranker:
 
-    def __init__(self):
+    def __init__(self, log_path: str = None):
+        self.log_path = log_path
+
         self.modules = dict(
-            similarity=SimilarityComputer(),
-            topic=TopicClassifier(),
-            **NetworkAnalysis().features_map
+            similarity=modules.SimilarityComputer(),
+            topic=modules.TopicClassifier(),
+            **modules.NetworkAnalysis().features_map
         )
 
     def __call__(
             self,
-            user: User,
-            posts: List[Post],
+            user: schemas.User,
+            posts: List[schemas.Post],
             weights: Dict[str, float]
-    ) -> Tuple[RankingMap, FeatureTable]:
+    ) -> Response:
         """
         Calculate the ranking and feature table based on user, posts, and weights.
         Args:
@@ -32,21 +34,27 @@ class Ranker:
             weights (Dict[str, float]): A dictionary mapping feature names to weights.
 
         Returns:
-            Tuple[RankingMap, FeatureTable]: A tuple containing the ranking map and feature table.
+            Response: A tuple containing the ranking map and feature table.
         """
-        features: FeatureTable = {post.id: dict() for post in posts}
+        features: schemas.shared.FeatureTable = {post.id: dict() for post in posts}
 
         for module in self.modules.keys():
             self.apply_module(features, module, user, posts)
 
-        return self.compute_weighted_ranking(features, weights), features
+        return Response(
+            ranking_map=self.compute_weighted_ranking(features, weights),
+            feature_table=features,
+            user=user,
+            posts=posts,
+            log_path=self.log_path
+        )
 
     def apply_module(
             self,
-            features: FeatureTable,
+            features: schemas.shared.FeatureTable,
             module_name: str,
-            user: User,
-            posts: List[Post]
+            user: schemas.User,
+            posts: List[schemas.Post]
     ) -> None:
         """
         Apply a specified module to the given features.
@@ -64,7 +72,10 @@ class Ranker:
             features[pid][module_name] = value
 
     @staticmethod
-    def compute_weighted_ranking(features: FeatureTable, weights: Dict[str, float]) -> RankingMap:
+    def compute_weighted_ranking(
+            features: schemas.shared.FeatureTable,
+            weights: Dict[str, float]
+    ) -> schemas.shared.RankingMap:
         """
         Compute the weighted ranking for a given set of features.
         Args:

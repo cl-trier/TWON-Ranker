@@ -3,8 +3,7 @@ from typing import List
 import torch
 from transformers import AutoTokenizer, AutoModel
 
-from ..schemas import User, Post
-from ..schemas.shared import RankingMap
+from src import schemas
 
 
 class SimilarityComputer:
@@ -26,13 +25,14 @@ class SimilarityComputer:
 
     def __call__(
             self,
-            user: User,
-            timeline_posts: List[Post],
+            user: schemas.User,
+            timeline_posts: List[schemas.Post],
             base: float = 10.,
             p_norm: float = 2.
-    ) -> RankingMap:
+    ) -> schemas.shared.RankingMap:
         """
-        Calculate the ranking map for a given user based on the similarity between the user's posts and the posts in the timeline.
+        Calculate the ranking map for a given user based on
+        the similarity between the user's posts and the posts in the timeline.
 
         Args:
             user (User): The user object representing the user whose ranking map is being calculated.
@@ -41,7 +41,7 @@ class SimilarityComputer:
             p_norm (float, optional): The p-norm value for the similarity calculation. Defaults to 2.
 
         Returns:
-            RankingMap: A dictionary containing the post IDs as keys and their corresponding similarity scores as values.
+            RankingMap: A dictionary containing the post IDs as keys and their similarity scores as values.
         """
         return {
             post.id: similarity for post, similarity in zip(

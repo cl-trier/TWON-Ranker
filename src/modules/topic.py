@@ -3,8 +3,7 @@ from typing import List, Dict, Iterator, Set
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-from ..schemas import User, Post
-from ..schemas.shared import Post_ID, RankingMap
+from src import schemas
 
 
 class TopicClassifier:
@@ -28,10 +27,10 @@ class TopicClassifier:
 
     def __call__(
             self,
-            user: User,
-            timeline_posts: List[Post],
+            user: schemas.User,
+            timeline_posts: List[schemas.Post],
             theta: float = 0.5
-    ) -> RankingMap:
+    ) -> schemas.shared.RankingMap:
         """
         Calculates the ranking map for a given user and a list of timeline posts.
 
@@ -41,7 +40,8 @@ class TopicClassifier:
             theta (float, optional): The threshold value for topic classification. Defaults to 0.5.
 
         Returns:
-            RankingMap: A dictionary containing the ranking map, where the keys are post IDs and the values are the ranking scores.
+            RankingMap: A dictionary containing the ranking map,
+            where the keys are post IDs and the values are the ranking scores.
         """
         user_topics: Set[str] = set().union(*self.classify(user.posts, theta).values())
 
@@ -50,7 +50,7 @@ class TopicClassifier:
             for pid, topics in self.classify(timeline_posts, theta).items()
         }
 
-    def classify(self, batch: List[Post], theta: float) -> Dict[Post_ID, Set[str]]:
+    def classify(self, batch: List[schemas.Post], theta: float) -> Dict[schemas.shared.Post_ID, Set[str]]:
         """
         Classifies a batch of posts based on a given threshold.
 
