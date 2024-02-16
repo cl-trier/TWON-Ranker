@@ -45,3 +45,6 @@ class Post(BaseModel):
             ]
         }
     }
+
+    def __hash__(self):
+        return hash(str(self.id) + str(self.author_id) + self.content)
