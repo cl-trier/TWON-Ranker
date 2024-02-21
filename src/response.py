@@ -1,22 +1,19 @@
 import datetime
 import json
 import uuid
-from typing import List
 
-from pydantic import BaseModel
+import pydantic
 
-from src import schemas
+from src import request
+from src.model import shared
 
 
-class Response(BaseModel):
+class Response(pydantic.BaseModel):
     id: uuid.UUID = None
     timestamp: datetime.datetime = None
-    
-    user: schemas.User
-    posts: List[schemas.Post]
 
-    ranking_map: schemas.shared.RankingMap
-    feature_table: schemas.shared.FeatureTable
+    request: request.Request
+    ranking_map: shared.Ranking
 
     def __init__(self, log_path: str = None, **data):
         super().__init__(**data)
