@@ -1,10 +1,7 @@
-from typing import List, Dict
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src import Ranker, Response
-from src.schemas import User, Post
+from src import Ranker, Request, Response
 from .config import Config
 
 cfg = Config()
@@ -32,7 +29,5 @@ app.add_middleware(
     summary='todo',
     description=open(f'{cfg.docs_path}/rank.md').read()
 )
-async def rank(
-        user: User, posts: List[Post], weights: Dict[str, float]
-) -> Response:
-    return ranker(user, posts, weights)
+async def rank(req: Request) -> Response:
+    return ranker(req)
