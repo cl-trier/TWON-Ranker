@@ -4,18 +4,17 @@ import pydantic
 
 
 class Decay(pydantic.BaseModel):
-    # todo: find a better variable name
-    minimum: float = 0.2
-    interval: datetime.timedelta = datetime.timedelta(days=3)
+    minimum: float
+    reference_timedelta: datetime.timedelta
 
     def __call__(
             self,
-            observation_time: datetime.datetime,
-            current_time: datetime.datetime
+            observation_datetime: datetime.datetime,
+            reference_datetime: datetime.datetime
     ) -> float:
         decay: float = 1. - (
-                (current_time - observation_time).total_seconds()
-                / self.interval.total_seconds()
+                (reference_datetime - observation_datetime).total_seconds()
+                / self.reference_timedelta.total_seconds()
         )
 
         return (

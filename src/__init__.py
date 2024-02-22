@@ -1,6 +1,7 @@
 import typing
 
-from src import model
+from src import modules
+from src.post import Post
 from src.request import Request
 from src.response import Response
 
@@ -21,16 +22,32 @@ class Ranker:
         )
 
     @staticmethod
-    def compute_post_score(req: Request, post: model.Post) -> float:
-        eps: float = req.noice()
-        decay: float = req.decay(req.timestamp, post.timestamp)
+    def compute_post_score(req: Request, post: Post) -> float:
 
-        observations: typing.Dict[str, float] = {
-            'likes': req.weights.likes * len(post.likes),
-            'dislikes': req.weights.dislikes * len(post.dislikes),
-            'comments': req.weights.comments * len(post.comments),
-            'comments_likes': req.weights.comments_likes * sum([comment.likes for comment in post.comments]),
-            'comments_dislikes': req.weights.comments_dislikes * sum([comment.dislikes for comment in post.comments]),
-        }
+        observations: typing.List[float] = [
+            weight * modules.Observations(items=items)(
+                **dict(
+                    func=req.observation_score,
+                    log_normalize=req.observation_log_normalize,
+                    reference_datetime=req.reference_datetime,
+                    decay=req.decay
+                )
+            )
+            for weight, items in
+            [
+                # post-based observations
+                (req.weights.likes, post.likes),
+                (req.weights.dislikes, post.dislikes),
+                (req.weights.comments, post.comments_timestamp),
 
-        return eps * decay * sum(observations.values())
+                # comments-based observations
+                (req.weights.comments_likes, post.comments_likes),
+                (req.weights.comments_dislikes, post.comments_dislikes),
+            ]
+        ]
+
+        if req.observation_score == 'count_based':
+            return req.noice() * req.decay(post.timestamp, req.reference_datetime) * sum(observations)
+
+        else:
+            return req.noice() * sum(observations)

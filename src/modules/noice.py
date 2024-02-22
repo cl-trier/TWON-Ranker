@@ -1,12 +1,15 @@
 import random
+import typing
 
 import pydantic
 
 
 class Noice(pydantic.BaseModel):
-    min: float = 0.8
-    max: float = 1.4
+    low: float
+    high: float
 
-    def __call__(self):
-        return random.uniform(self.min, self.max)
+    def __call__(self) -> float:
+        return random.uniform(self.low, self.high)
 
+    def draw_samples(self, n: int) -> typing.List[float]:
+        return [self() for _ in range(n)]

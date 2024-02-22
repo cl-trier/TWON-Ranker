@@ -1,11 +1,11 @@
 import datetime
 import json
+import typing
 import uuid
 
 import pydantic
 
 from src import request
-from src.model import shared
 
 
 class Response(pydantic.BaseModel):
@@ -13,7 +13,7 @@ class Response(pydantic.BaseModel):
     timestamp: datetime.datetime = None
 
     request: request.Request
-    ranking_map: shared.Ranking
+    ranking_map: typing.Dict[str, float]
 
     def __init__(self, log_path: str = None, **data):
         super().__init__(**data)

@@ -4,19 +4,19 @@ import pytest
 
 from src import modules
 
-LOWER_LIMIT: float = 0.8
-UPPER_LIMIT: float = 1.4
+LOW_BOUND: float = 0.8
+HIGH_BOUND: float = 1.4
 
 N: int = 1_000_000
 TOL: float = 0.001
 
-FUNCTION = modules.Noice(min=LOWER_LIMIT, max=UPPER_LIMIT)
+FUNCTION = modules.Noice(low=LOW_BOUND, high=HIGH_BOUND)
 
 
 def test_boundaries():
-    assert LOWER_LIMIT <= FUNCTION() <= UPPER_LIMIT
+    assert LOW_BOUND <= FUNCTION() <= HIGH_BOUND
 
 
 def test_distribution():
-    samples: typing.List[float] = [FUNCTION() for _ in range(N)]
-    assert sum(samples) / len(samples) == pytest.approx(sum([LOWER_LIMIT, UPPER_LIMIT]) / 2, abs=TOL)
+    samples: typing.List[float] = FUNCTION.draw_samples(N)
+    assert sum(samples) / len(samples) == pytest.approx(sum([LOW_BOUND, HIGH_BOUND]) / 2, abs=TOL)

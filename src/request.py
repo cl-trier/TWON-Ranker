@@ -3,8 +3,8 @@ import typing
 
 import pydantic
 
-from src import model
 from src import modules
+from src.post import Post
 
 
 class Weights(pydantic.BaseModel):
@@ -17,10 +17,13 @@ class Weights(pydantic.BaseModel):
 
 
 class Request(pydantic.BaseModel):
-    timestamp: datetime.datetime
+    items: typing.List[Post]
 
-    items: typing.List[model.Post]
+    reference_datetime: datetime.datetime = datetime.datetime.now()
 
-    weights: Weights
-    decay: modules.Decay
-    noice: modules.Noice
+    weights: Weights = Weights()
+    decay: modules.Decay = modules.Decay(minimum=.2, reference_timedelta=datetime.timedelta(days=3))
+    noice: modules.Noice = modules.Noice(low=0.6, high=1.4)
+
+    observation_score: typing.Literal['count_based', 'decay_based'] = 'count_based'
+    observation_log_normalize: bool = False
