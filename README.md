@@ -1,25 +1,93 @@
 # TWON: Ranker - Modularized & Weighted Timeline Ranking
 
-The repository contains a REST API to rank posts based on a social media profile. The ranker consists of multiple modules that can be weighted individually to explore and analyze different ranting strategies.
-
-Note: Currently, the work is an alpha version and will undergo breaking changes during the development.
+todo
 
 ## Project Setup
+todo
 
 ```sh
 # install Python requirements
 make install
 
-# start with hot-reload for development
+# start api with hot-reload for development
 make dev
 
-# start for production
+# start api for production
 make serve
 
 # run unit tests
 make test
 ```
 
-## Usage
+## Modules
+todo
 
+### Noise
+todo
+
+```math
+\epsilon := \text{draw random from } uniform(LOW, HIGH)
+```
+
+### Decay
+todo
+
+### Engagement
+todo
+
+### Post
+todo
+
+```python
+post = Post(
+    id='unique string based identifier',
+    timestamp='valid datetime object',
+    
+    likes=[
+        'list of valid datetime object',
+        '...'
+    ],
+    
+    dislikes=[
+        'list of valid datetime object',
+        '...'
+    ],
+    
+    comments=[
+        'list of Post object, without comments',
+        '...'
+    ]
+)
+```
+
+### Weights
+todo
+
+```python
+
+```
+
+### Request
+todo
+
+```python
+req = Request(
+    items=[
+        Post(**kwargs),
+        Post(**kwargs),
+        Post(**kwargs),
+        Post(**kwargs)
+    ],
+    
+    reference_datetime=datetime
+    
+    decay=Decay(minimum=.2, reference_timedelta=datetime.timedelta(days=3))
+    noise=modules.Noise(low=.6, high=1.4)
+    engagement=modules.Engagement(func='count_based', log_normalize=False)
+    
+    weights=Weights()
+)
+```
+
+### Ranker
 todo
