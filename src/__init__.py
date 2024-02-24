@@ -1,6 +1,5 @@
 import typing
 
-from src import modules
 from src.post import Post
 from src.request import Request
 from src.response import Response
@@ -25,13 +24,10 @@ class Ranker:
     def compute_post_score(req: Request, post: Post) -> float:
 
         observations: typing.List[float] = [
-            weight * modules.Observations(items=items)(
-                **dict(
-                    func=req.observation_score,
-                    log_normalize=req.observation_log_normalize,
-                    reference_datetime=req.reference_datetime,
-                    decay=req.decay
-                )
+            weight * req.engagement(
+                items=items,
+                reference_datetime=req.reference_datetime,
+                decay=req.decay
             )
             for weight, items in
             [
@@ -46,7 +42,7 @@ class Ranker:
             ]
         ]
 
-        if req.observation_score == 'count_based':
+        if req.engagement.func == 'count_based':
             return req.noise() * req.decay(post.timestamp, req.reference_datetime) * sum(observations)
 
         else:

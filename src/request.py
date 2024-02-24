@@ -21,9 +21,8 @@ class Request(pydantic.BaseModel):
 
     reference_datetime: datetime.datetime = datetime.datetime.now()
 
-    weights: Weights = Weights()
     decay: modules.Decay = modules.Decay(minimum=.2, reference_timedelta=datetime.timedelta(days=3))
-    noise: modules.Noise = modules.Noise(low=0.6, high=1.4)
+    noise: modules.Noise = modules.Noise(low=.6, high=1.4)
+    engagement: modules.Engagement = modules.Engagement(func='count_based', log_normalize=False)
 
-    observation_score: typing.Literal['count_based', 'decay_based'] = 'count_based'
-    observation_log_normalize: bool = False
+    weights: Weights = Weights()
