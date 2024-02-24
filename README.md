@@ -23,17 +23,47 @@ make test
 todo
 
 ### Noise
-todo
+Draw random floating point numbers from the normal distribution provided lower and upper boundaries.
 
 ```math
 \epsilon := \text{draw random from } uniform(LOW, HIGH)
 ```
 
+```python
+LOW: float
+HIGH: float
+
+eps = modules.Noise(low=LOW, high=HIGH)
+
+rnd_number: float = eps()
+rnd_samples: List[float] = eps.draw_samples(N)
+```
+
 ### Decay
 todo
 
+```python
+MINIMUM: float
+REFERENCE_TIMEDELTA: datetime.timedelta
+
+decay = modules.Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
+
+# todo
+```
+
 ### Engagement
 todo
+
+```python
+FUNC: Literal['count_based', 'decay_based']
+LOG_NORMALIZE: bool
+
+E = modules.Engagement(func=FUNC, log_normalize=LOG_NORMALIZE)
+
+# todo
+```
+
+## Usage
 
 ### Post
 todo
@@ -44,17 +74,17 @@ post = Post(
     timestamp='valid datetime object',
     
     likes=[
-        'list of valid datetime object',
+        'list of valid datetime objects',
         '...'
     ],
     
     dislikes=[
-        'list of valid datetime object',
+        'list of valid datetime objects',
         '...'
     ],
     
     comments=[
-        'list of Post object, without comments',
+        'list of Post objects, without comments',
         '...'
     ]
 )
@@ -80,19 +110,17 @@ todo
 ```python
 req = Request(
     items=[
-        Post(**kwargs),
-        Post(**kwargs),
-        Post(**kwargs),
-        Post(**kwargs)
+        'list of Post objects', # see Usage:Post
+        '...'
     ],
     
-    reference_datetime=datetime
+    reference_datetime='valid datetime object'
     
-    decay=Decay(minimum=.2, reference_timedelta=datetime.timedelta(days=3))
-    noise=modules.Noise(low=.6, high=1.4)
+    decay=modules.Decay(minimum=.2, reference_timedelta=datetime.timedelta(days=3))
+    noise=modules.Noise # see Modules:Noise
     engagement=modules.Engagement(func='count_based', log_normalize=False)
     
-    weights=Weights()
+    weights=Weights  # see Usage:Weights
 )
 ```
 
