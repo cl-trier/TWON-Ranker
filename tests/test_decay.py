@@ -10,13 +10,12 @@ TOL: float = 0.001
 
 FUNCTION = modules.Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
 
-
-def test_now():
-    datetime_now = datetime.datetime.now()
-    assert FUNCTION(datetime_now, datetime_now) == pytest.approx(1., abs=TOL)
+DATETIME_NOW = datetime.datetime.now()
 
 
-def test_max_past():
-    datetime_now = datetime.datetime.now()
-    datetime_past = datetime_now - REFERENCE_TIMEDELTA
-    assert FUNCTION(datetime_past, datetime_now) == pytest.approx(MINIMUM, abs=TOL)
+def test_abs_now():
+    assert FUNCTION(DATETIME_NOW, DATETIME_NOW) == pytest.approx(1., abs=TOL)
+
+
+def test_abs_past():
+    assert FUNCTION(DATETIME_NOW - REFERENCE_TIMEDELTA, DATETIME_NOW) == pytest.approx(MINIMUM, abs=TOL)
