@@ -64,7 +64,14 @@ post = Post(
 todo
 
 ```python
+w = Weights(
+    likes=1.
+    dislikes=1.
+    comments=1.
 
+    comments_likes=1.
+    comments_dislikes=1.
+)
 ```
 
 ### Request
