@@ -17,8 +17,5 @@ class Decay(pydantic.BaseModel):
                 / self.reference_timedelta.total_seconds()
         )
 
-        return (
-            decay
-            if decay >= self.minimum else
-            self.minimum
-        )
+        return max([decay, self.minimum])
+
