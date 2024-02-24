@@ -47,7 +47,7 @@ class Ranker:
         ]
 
         if req.observation_score == 'count_based':
-            return req.noice() * req.decay(post.timestamp, req.reference_datetime) * sum(observations)
+            return req.noise() * req.decay(post.timestamp, req.reference_datetime) * sum(observations)
 
         else:
-            return req.noice() * sum(observations)
+            return req.noise() * sum(observations)

@@ -1,3 +1,3 @@
 from .decay import Decay
-from .noice import Noice
+from .noise import Noise
 from .observations import Observations

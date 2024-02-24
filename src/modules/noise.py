@@ -4,7 +4,7 @@ import typing
 import pydantic
 
 
-class Noice(pydantic.BaseModel):
+class Noise(pydantic.BaseModel):
     low: float
     high: float
 
