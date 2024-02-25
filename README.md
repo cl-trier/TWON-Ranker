@@ -1,5 +1,4 @@
 # TWON: Ranker - Modularized & Weighted Timeline Ranking
-
 todo
 
 ## Project Setup
@@ -20,20 +19,19 @@ make test
 ```
 
 ## Modules
-todo
+The current TWON ranking/recommendation algorithm is divided into three encapsulated modules that composed denote the ranking function. These modules provide the functionalities to measure engagement given a predefined data format, represent the course of time, and partly randomize the final ranking.
 
 ### Noise
-Draw random floating point numbers from the normal distribution provided lower and upper boundaries.
-
-```math
-\epsilon := \text{draw random from } uniform(LOW, HIGH)
-```
+We draw random floating point numbers from the normal distribution provided lower and upper boundaries to generate a multiplicative noise (the neutral value defined as `LOW = HIGH = 1.` will result in no noise).
 
 ```python
+from src.modules import Noise
+
 LOW: float
 HIGH: float
+N: int
 
-eps = modules.Noise(low=LOW, high=HIGH)
+eps = Noise(low=LOW, high=HIGH)
 
 rnd_number: float = eps()
 rnd_samples: List[float] = eps.draw_samples(N)
@@ -43,10 +41,12 @@ rnd_samples: List[float] = eps.draw_samples(N)
 todo
 
 ```python
-MINIMUM: float
-REFERENCE_TIMEDELTA: datetime.timedelta
+from src.modules import Decay
 
-decay = modules.Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
+MINIMUM: float
+REFERENCE_TIMEDELTA: timedelta
+
+decay = Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
 
 # todo
 ```
@@ -55,46 +55,54 @@ decay = modules.Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
 todo
 
 ```python
+from src.modules import Engagement
+
 FUNC: Literal['count_based', 'decay_based']
 LOG_NORMALIZE: bool
 
-E = modules.Engagement(func=FUNC, log_normalize=LOG_NORMALIZE)
+E = Engagement(func=FUNC, log_normalize=LOG_NORMALIZE)
 
 # todo
 ```
 
 ## Usage
+todo
 
 ### Post
 todo
 
 ```python
+from src.post import Post
+
+ID: str
+TIMESTAMP: datetime
+OBERSERVATIONS: List[datetime]
+COMMENTS: List[Post] # post objects w/o comments
+
 post = Post(
-    id='unique string based identifier',
-    timestamp='valid datetime object',
-    
-    likes=[
-        'list of valid datetime objects',
-        '...'
-    ],
-    
-    dislikes=[
-        'list of valid datetime objects',
-        '...'
-    ],
-    
-    comments=[
-        'list of Post objects, without comments',
-        '...'
-    ]
+    id=ID,
+    timestamp=TIMESTAMP,
+    likes=OBERSERVATIONS,
+    dislikes=OBERSERVATIONS,
+    comments=COMMENTS,
 )
+
+# todo
 ```
 
-### Weights
+### Request
 todo
 
 ```python
-w = Weights(
+from src.request import Request, Weights
+
+ITEMS: List[Post] # see Usage:Post
+REFERENCE_DATETIME: datetime
+DECAY: modules.Decay  # see Modules:Decay
+NOISE: modules.Noise  # see Modules:Noise
+ENGAGEMENT: modules.Engagement # see Modules:Engagement
+
+WEIGHTS: Weights(
     likes=1.
     dislikes=1.
     comments=1.
@@ -102,27 +110,20 @@ w = Weights(
     comments_likes=1.
     comments_dislikes=1.
 )
-```
 
-### Request
-todo
-
-```python
 req = Request(
-    items=[
-        'list of Post objects', # see Usage:Post
-        '...'
-    ],
-    
-    reference_datetime='valid datetime object'
-    
-    decay=modules.Decay(minimum=.2, reference_timedelta=datetime.timedelta(days=3))
-    noise=modules.Noise # see Modules:Noise
-    engagement=modules.Engagement(func='count_based', log_normalize=False)
-    
-    weights=Weights  # see Usage:Weights
+    items=ITEMS,
+    reference_datetime=REFERENCE_DATETIME,
+    decay=DECAY,
+    noise=NOISE,
+    engagement=ENGAGEMENT
+    weights=WEIGHTS
 )
 ```
 
 ### Ranker
 todo
+
+```python
+# todo
+```
