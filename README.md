@@ -38,7 +38,9 @@ rnd_samples: List[float] = eps.draw_samples(N)
 ```
 
 ### Decay
-todo
+The purpose of the decay object is to compute a decay factor based on time differences. In the context of this project, the decay factor is used, for instance, to decrease the relevance of posts over time, so that older posts move to occupy lower positions in the ranking.
+We instantiate a decay object by defining a minimum value, which is going to serve as a lower boundary for the decay, as well as a reference time interval. When called, the decay object calculates a time difference between the reference time interval and the observed time interval . This value is then subtracted from 1, and the decay factor resulting from this operation is returned, accordingly. 
+
 
 ```python
 from src.modules import Decay
@@ -52,7 +54,7 @@ decay = Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
 ```
 
 ### Engagement
-todo
+The object E is an instance of the Engagement class, which is designed to compute engagement scores based on different criteria. The func attribute can be either ‘count_based’ or or ‘decay_based’. If the former is selected, then the engagement score is calculated by simply counting the items, whereas, if the latter is selected, the engagement score is obtained by applying decay to each item and then summing the items together. Moreover, the log_normalize attribute defines whether or not to return a natural logarithm of the score.
 
 ```python
 from src.modules import Engagement
@@ -69,7 +71,12 @@ E = Engagement(func=FUNC, log_normalize=LOG_NORMALIZE)
 todo
 
 ### Post
-todo
+We want to create an object to represent a social media post, therefore, we instantiate it from the Post class. To do so, we firstly define the following variables:
+- **ID**: A placeholder variable for the unique identifier (ID) of the post (string).
+- TIMESTAMP: A placeholder variable for the timestamp when the post was created. This is a datetime object, i.e. an object that combines date and time information. 
+- **OBSERVATIONS**: A placeholder variable for a list of observations (timestamps, see above). Notice that upon creating the post object, these timestamps represent both likes and dislikes.
+- **COMMENTS**: A placeholder variable for a list of Post objects representing comments 
+
 
 ```python
 from src.post import Post
@@ -91,7 +98,13 @@ post = Post(
 ```
 
 ### Request
-todo
+We create a Request object with the specified parameters to perform a range of computations related to engagement. The weights attribute contains several knobs that can be tweaked to affect the different engagement factors (here, we provided some default values for likes, dislikes, comments, etc.)
+The request object makes use of the weights attribute, as well as the following attributes:
+- **items**: a list of Post objects 
+- **reference_datetime**: takes a datetime object, i.e. an object that combines date and time information. 
+- **decay**: takes the decay factor 
+- **noise**: takes the noise factor
+- **engagement**: takes the engagement factor
 
 ```python
 from src.request import Request, Weights
