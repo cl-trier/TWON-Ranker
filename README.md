@@ -38,8 +38,7 @@ rnd_samples: List[float] = eps.draw_samples(N)
 ```
 
 ### Decay
-The purpose of the decay object is to compute a decay factor based on time differences. In the context of this project, the decay factor is used, for instance, to decrease the relevance of posts over time, so that older posts move to occupy lower positions in the ranking.
-We instantiate a decay object by defining a minimum value, which is going to serve as a lower boundary for the decay, as well as a reference time interval. When called, the decay object calculates a time difference between the reference time interval and the observed time interval . This value is then subtracted from 1, and the decay factor resulting from this operation is returned, accordingly. 
+We compute a decay factor based on the time elapsed between two references. In the context of this project, the decay factor decreases the relevance of posts over time. That results in older posts without recent interaction being less often recommended. We instantiate a decay object by defining a minimum value that serves as a lower boundary for the decay and a reference time interval. When called, the decay object calculates a time difference between the reference time interval and the observed time interval. The maximum computed value is defined as 1, for `observation == reference`.
 
 
 ```python
@@ -50,11 +49,11 @@ REFERENCE_TIMEDELTA: timedelta
 
 decay = Decay(minimum=MINIMUM, reference_timedelta=REFERENCE_TIMEDELTA)
 
-# todo
+decay_factor: float = decay(observation_datetime=datetime, reference_datetime=datetime) 
 ```
 
 ### Engagement
-The object E is an instance of the Engagement class, which is designed to compute engagement scores based on different criteria. The func attribute can be either ‘count_based’ or or ‘decay_based’. If the former is selected, then the engagement score is calculated by simply counting the items, whereas, if the latter is selected, the engagement score is obtained by applying decay to each item and then summing the items together. Moreover, the log_normalize attribute defines whether or not to return a natural logarithm of the score.
+The engagement module computes a score based on a plain count of observations `count_based` or the sum of decayed values for the individual data points `decay_based`. For the decayed-based version, an instantiated decay module is necessary. Optionally, the output can be normalized with the natural logarithm `log_normalize`.
 
 ```python
 from src.modules import Engagement
@@ -64,18 +63,19 @@ LOG_NORMALIZE: bool
 
 E = Engagement(func=FUNC, log_normalize=LOG_NORMALIZE)
 
-# todo
+score_count: int = E(items=List[datetime])
+score_decay: float = E(items=List[datetime], reference_datetime=datetime, decay=decay)
 ```
 
 ## Usage
 todo
 
 ### Post
-We want to create an object to represent a social media post, therefore, we instantiate it from the Post class. To do so, we firstly define the following variables:
-- **ID**: A placeholder variable for the unique identifier (ID) of the post (string).
-- TIMESTAMP: A placeholder variable for the timestamp when the post was created. This is a datetime object, i.e. an object that combines date and time information. 
-- **OBSERVATIONS**: A placeholder variable for a list of observations (timestamps, see above). Notice that upon creating the post object, these timestamps represent both likes and dislikes.
-- **COMMENTS**: A placeholder variable for a list of Post objects representing comments 
+We model a social media post for the TWON simulation with the following class. The object contains the following attributes:
+- **id:** A unique identifier (ID) of the post as a string.
+- **timestamp:** The timestamp containing the post creation date and time. The class expect a string formatted defined by ISO 8601.
+- **likes/dislikes:** A list of observations denoted as timestamps (see above).
+- **comments:** A list of `Post` objects representing comments. This approach allows arbitrary nest posts into complex tree structures for future TWON modifications. The current implementation ignores those sublevel structures and only counts direct comments of the main posts into the observations.
 
 
 ```python
@@ -93,18 +93,16 @@ post = Post(
     dislikes=OBERSERVATIONS,
     comments=COMMENTS,
 )
-
-# todo
 ```
 
 ### Request
-We create a Request object with the specified parameters to perform a range of computations related to engagement. The weights attribute contains several knobs that can be tweaked to affect the different engagement factors (here, we provided some default values for likes, dislikes, comments, etc.)
-The request object makes use of the weights attribute, as well as the following attributes:
-- **items**: a list of Post objects 
-- **reference_datetime**: takes a datetime object, i.e. an object that combines date and time information. 
-- **decay**: takes the decay factor 
-- **noise**: takes the noise factor
-- **engagement**: takes the engagement factor
+The `Request` object denotes the attributes needed for interaction with the ranker. It collates all modules previously defined and combines them with weights for each observation type. The object contains the following attributes:
+- **items:** A list of Post objects 
+- **reference_datetime:** The reference timestamp (defaults to now while receiving the request). 
+- **decay:** Attributes needed to instantiate the `Decay` module 
+- **noise:** Attributes needed to instantiate the `Noise` module 
+- **engagement:** Attributes needed to instantiate the `Engagement` module 
+- **weights:** Weights to tweak the different engagement factors (defaults `1.0` for all)
 
 ```python
 from src.request import Request, Weights
