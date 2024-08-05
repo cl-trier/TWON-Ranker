@@ -1,12 +1,19 @@
-[project]
-dynamic = ["dependencies"]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
+
+[tool.poetry]
 name = "TWON-Ranker"
-version = "0.0.1"
+version = "0.0.2"
+description = ""
+license = "Apache-2.0"
 authors = [
-    { name = "Simon Münker", email = "muenker@uni-trier.de" },
+    "Simon Münker <muenker@uni-trier.de>"
 ]
 readme = "README.md"
+homepage = "https://ranker.twon.unit-trier.de"
+repository = "https://github.com/smnmnkr/TWON-Ranker"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -14,15 +21,21 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
-requires-python = ">=3.10"
-
-[project.urls]
-Homepage = "https://ranker.twon.unit-trier.de"
-Repository = "https://github.com/smnmnkr/TWON-Ranker"
 
 
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^2.8.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+ruff = "^0.5.6"
+
+[tool.poetry.group.api.dependencies]
+fastapi = "^0.112.0"
+uvicorn = "^0.30.5"
+gunicorn = "^22.0.0"
+
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -1,7 +1,14 @@
 # TWON: Ranker - Modularized & Weighted Timeline Ranking
 todo
 
-## Project Setup
+## Usage
+
+```sh
+pip install twon-ranker
+
+```
+
+## Development Setup
 todo
 
 ```sh
@@ -107,6 +114,7 @@ The `Request` object denotes the attributes needed for interaction with the rank
 ```python
 from src.request import Request, Weights
 
+MODE: Literal["ranked", "chronological", "random"] = "ranked"
 ITEMS: List[Post] # see Usage:Post
 REFERENCE_DATETIME: datetime
 DECAY: modules.Decay  # see Modules:Decay

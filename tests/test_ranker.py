@@ -1,9 +1,9 @@
 import logging
 import typing
 
-from src import Ranker
-from src.post import Post
-from src.request import Request
+from twon_ranker import Ranker
+from twon_ranker.post import Post
+from twon_ranker.request import Request
 
 
 def test_ranker(posts: typing.List[Post]):

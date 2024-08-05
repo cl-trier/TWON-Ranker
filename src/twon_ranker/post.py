@@ -10,7 +10,8 @@ class Post(pydantic.BaseModel):
 
     likes: typing.List[datetime.datetime] = []
     dislikes: typing.List[datetime.datetime] = []
-    comments: typing.List['Post'] = []
+    reposts: typing.List[datetime.datetime] = []
+    comments: typing.List["Post"] = []
 
     def __hash__(self):
         return hash(self.id)
@@ -34,7 +35,7 @@ class Post(pydantic.BaseModel):
         "json_schema_extra": {
             "examples": [
                 dict(
-                    id='P0001',
+                    id="P0001",
                     timestamp=datetime.datetime.now() - datetime.timedelta(hours=72),
                     likes=[
                         datetime.datetime.now() - datetime.timedelta(hours=68),
@@ -44,10 +45,13 @@ class Post(pydantic.BaseModel):
                         datetime.datetime.now() - datetime.timedelta(hours=40),
                         datetime.datetime.now() - datetime.timedelta(hours=24),
                     ],
-                    comments=[]
+                    reposts=[
+                        datetime.datetime.now() - datetime.timedelta(hours=18),
+                    ],
+                    comments=[],
                 ),
                 dict(
-                    id='P0002',
+                    id="P0002",
                     timestamp=datetime.datetime.now() - datetime.timedelta(hours=48),
                     likes=[
                         datetime.datetime.now() - datetime.timedelta(hours=36),
@@ -57,19 +61,21 @@ class Post(pydantic.BaseModel):
                         datetime.datetime.now() - datetime.timedelta(hours=32),
                         datetime.datetime.now() - datetime.timedelta(hours=18),
                     ],
+                    reposts=[],
                     comments=[
                         dict(
-                            id='C0001',
-                            timestamp=datetime.datetime.now() - datetime.timedelta(hours=20),
+                            id="C0001",
+                            timestamp=datetime.datetime.now()
+                            - datetime.timedelta(hours=20),
                             likes=[
                                 datetime.datetime.now() - datetime.timedelta(hours=16),
                             ],
                             dislikes=[],
                         )
-                    ]
+                    ],
                 ),
                 dict(
-                    id='P0003',
+                    id="P0003",
                     timestamp=datetime.datetime.now() - datetime.timedelta(hours=8),
                     likes=[
                         datetime.datetime.now() - datetime.timedelta(hours=6),
@@ -79,10 +85,15 @@ class Post(pydantic.BaseModel):
                         datetime.datetime.now() - datetime.timedelta(hours=3),
                         datetime.datetime.now() - datetime.timedelta(hours=1),
                     ],
+                    reposts=[
+                        datetime.datetime.now() - datetime.timedelta(hours=12),
+                        datetime.datetime.now() - datetime.timedelta(hours=32),
+                    ],
                     comments=[
                         dict(
-                            id='C0002',
-                            timestamp=datetime.datetime.now() - datetime.timedelta(hours=4),
+                            id="C0002",
+                            timestamp=datetime.datetime.now()
+                            - datetime.timedelta(hours=4),
                             likes=[
                                 datetime.datetime.now() - datetime.timedelta(hours=2),
                             ],
@@ -91,15 +102,16 @@ class Post(pydantic.BaseModel):
                             ],
                         ),
                         dict(
-                            id='C0003',
-                            timestamp=datetime.datetime.now() - datetime.timedelta(hours=2),
+                            id="C0003",
+                            timestamp=datetime.datetime.now()
+                            - datetime.timedelta(hours=2),
                             likes=[],
                             dislikes=[
                                 datetime.datetime.now() - datetime.timedelta(hours=1),
                             ],
-                        )
-                    ]
-                )
+                        ),
+                    ],
+                ),
             ]
         }
     }

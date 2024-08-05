@@ -1,15 +1,23 @@
 # --- --- ---
 
+.PHONY: install
 install:
-	@python3 -m pip install -r requirements.txt
+	@poetry install
 
+
+.PHONY: test
 test:
-	@python3 -m pytest tests/
+	poetry run pytest
+
+
+.PHONY: check
+check:
+	@poetry check --lock
+	@poetry run ruff check --fix
+	@poetry run ruff format
 
 # --- --- ---
 
-dev:
-	uvicorn api:app --reload
-
+.PHONY: serve
 serve:
-	uvicorn api:app
+	poetry run python -m twon_ranker_api

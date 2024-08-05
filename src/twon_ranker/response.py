@@ -5,14 +5,14 @@ import uuid
 
 import pydantic
 
-from src import request
+from twon_ranker.request import Request
 
 
 class Response(pydantic.BaseModel):
     id: uuid.UUID = None
     timestamp: datetime.datetime = None
 
-    request: request.Request
+    request: Request
     ranking_map: typing.Dict[str, float]
 
     def __init__(self, log_path: str = None, **data):
@@ -26,7 +26,7 @@ class Response(pydantic.BaseModel):
 
     def log(self, path: str) -> None:
         json.dump(
-            self.model_dump(mode='json', exclude=set('log_path')),
-            open(f'{path}/{self.id}.json', "w"),
-            indent=4
+            self.model_dump(mode="json", exclude=set("log_path")),
+            open(f"{path}/{self.id}.json", "w"),
+            indent=4,
         )

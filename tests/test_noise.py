@@ -2,7 +2,7 @@ import typing
 
 import pytest
 
-from src import modules
+from twon_ranker import modules
 
 LOW_BOUND: float = 0.8
 HIGH_BOUND: float = 1.4
@@ -20,4 +20,6 @@ def test_bounds():
 
 
 def test_distribution():
-    assert sum(SAMPLES) / len(SAMPLES) == pytest.approx(sum([LOW_BOUND, HIGH_BOUND]) / 2, abs=TOL)
+    assert sum(SAMPLES) / len(SAMPLES) == pytest.approx(
+        sum([LOW_BOUND, HIGH_BOUND]) / 2, abs=TOL
+    )

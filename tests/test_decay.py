@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from src import modules
+from twon_ranker import modules
 
 MINIMUM: float = 0.2
 REFERENCE_TIMEDELTA: datetime.timedelta = datetime.timedelta(days=3)
@@ -14,8 +14,10 @@ DATETIME_NOW = datetime.datetime.now()
 
 
 def test_abs_now():
-    assert FUNCTION(DATETIME_NOW, DATETIME_NOW) == pytest.approx(1., abs=TOL)
+    assert FUNCTION(DATETIME_NOW, DATETIME_NOW) == pytest.approx(1.0, abs=TOL)
 
 
 def test_abs_past():
-    assert FUNCTION(DATETIME_NOW - REFERENCE_TIMEDELTA, DATETIME_NOW) == pytest.approx(MINIMUM, abs=TOL)
+    assert FUNCTION(DATETIME_NOW - REFERENCE_TIMEDELTA, DATETIME_NOW) == pytest.approx(
+        MINIMUM, abs=TOL
+    )
