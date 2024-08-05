@@ -8,7 +8,7 @@ todo
 pip install twon-ranker
 
 # running as python module 
-python -m twon_ranker_api
+python -m twon_ranker.api
 ```
 
 ## Development Setup

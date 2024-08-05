@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import twon_ranker
-import twon_ranker_api.config
 
-cfg = twon_ranker_api.Config()
+
+cfg = twon_ranker.api.Config()
 
 ranker = twon_ranker.Ranker(log_path=cfg.log_path)
 
