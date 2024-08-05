@@ -4,8 +4,11 @@ todo
 ## Usage
 
 ```sh
+# installing via pip
 pip install twon-ranker
 
+# running as python module 
+python -m twon_ranker_api
 ```
 
 ## Development Setup
