@@ -4,7 +4,7 @@ import pathlib
 
 class Config:
     title: str = "TWON Ranker API"
-    version: str = "0.0.2"
+    version: str = "0.0.3"
 
     trust_origins: typing.List[str] = [
         "http://localhost:5173",
