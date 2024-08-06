@@ -20,4 +20,4 @@ check:
 
 .PHONY: serve
 serve:
-	poetry run python -m twon_ranker_api
+	poetry run python -m twon_ranker.api
