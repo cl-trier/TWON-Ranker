@@ -27,6 +27,7 @@ classifiers = [
 python = "^3.10"
 pydantic = "^2.8.2"
 fastapi = "^0.112.0"
+fastapi-cli = "^0.0.5"
 uvicorn = "^0.30.5"
 gunicorn = "^22.0.0"
 
